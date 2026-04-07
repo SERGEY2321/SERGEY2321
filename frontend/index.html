@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Math Photo Solver</title>
   <link rel="stylesheet" href="/static/style.css" />
-  <!-- MathJax for rendering LaTeX-like notation -->
   <script>
     window.MathJax = {
       tex: { inlineMath: [['$','$'], ['\\(','\\)']] },
@@ -17,63 +16,143 @@
 <body>
 
 <div class="app">
+
+  <!-- Header -->
   <header>
-    <h1>Math Photo Solver</h1>
-    <p class="subtitle">Сфотографируй задачу — получи пошаговое решение</p>
+    <div class="logo">
+      <span class="logo-icon">∑</span>
+      <div>
+        <h1>Math Solver</h1>
+        <p class="subtitle">Реши любую задачу по фото или введи вручную</p>
+      </div>
+    </div>
   </header>
 
-  <!-- Upload area -->
-  <section class="upload-section">
+  <!-- Tab switcher -->
+  <div class="tabs">
+    <button class="tab active" data-tab="upload">
+      <span class="tab-icon">📷</span> Загрузить фото
+    </button>
+    <button class="tab" data-tab="generate">
+      <span class="tab-icon">⚡</span> Сгенерировать задачу
+    </button>
+  </div>
+
+  <!-- ══ TAB: Upload ══ -->
+  <div id="tab-upload" class="tab-panel active">
+
     <div class="drop-zone" id="dropZone">
-      <span class="drop-icon">📷</span>
-      <p>Перетащи фото или <label class="link" for="fileInput">выбери файл</label></p>
+      <div class="drop-inner">
+        <span class="drop-big-icon">📷</span>
+        <p class="drop-title">Перетащи сюда фото</p>
+        <p class="drop-sub">или <label class="link" for="fileInput">выбери файл</label> · JPG, PNG, WEBP</p>
+      </div>
       <input type="file" id="fileInput" accept="image/*" capture="environment" />
     </div>
-    <img id="preview" class="preview hidden" alt="Предпросмотр" />
-  </section>
 
-  <!-- OCR mode -->
-  <section class="options-section">
-    <label for="modeSelect">Режим OCR:</label>
-    <select id="modeSelect">
-      <option value="auto">Авто</option>
-      <option value="printed">Печатный текст</option>
-      <option value="handwritten">Рукописный текст</option>
-    </select>
-  </section>
+    <img id="uploadPreview" class="preview hidden" alt="Предпросмотр" />
 
-  <!-- Action button -->
-  <button id="solveBtn" class="btn-primary" disabled>Решить</button>
+    <div class="option-row">
+      <label class="option-label">Режим OCR</label>
+      <div class="segmented" id="modeSegment">
+        <button class="seg-btn active" data-value="auto">Авто</button>
+        <button class="seg-btn" data-value="printed">Печатный</button>
+        <button class="seg-btn" data-value="handwritten">Рукописный</button>
+      </div>
+    </div>
 
-  <!-- Loader -->
+    <button id="solveBtnUpload" class="btn-primary" disabled>
+      <span class="btn-icon">🔍</span> Решить
+    </button>
+  </div>
+
+  <!-- ══ TAB: Generate ══ -->
+  <div id="tab-generate" class="tab-panel hidden">
+
+    <!-- Category chips -->
+    <p class="section-label">Выбери категорию</p>
+    <div class="chips" id="categoryChips">
+      <button class="chip active" data-cat="Арифметика">Арифметика</button>
+      <button class="chip" data-cat="Алгебра">Алгебра</button>
+      <button class="chip" data-cat="Вычисления">Вычисления</button>
+      <button class="chip" data-cat="Упрощение">Упрощение</button>
+    </div>
+
+    <!-- Expression input -->
+    <p class="section-label" style="margin-top:1.25rem">Выражение</p>
+    <div class="expr-row">
+      <input
+        type="text"
+        id="exprInput"
+        class="expr-input"
+        placeholder="Например: 2*x + 3 = 7"
+        spellcheck="false"
+        autocomplete="off"
+      />
+      <button id="randomBtn" class="btn-icon-only" title="Случайная задача">🎲</button>
+    </div>
+
+    <!-- Quick examples -->
+    <div class="examples" id="exampleBtns"></div>
+
+    <!-- Generate button -->
+    <button id="generateBtn" class="btn-secondary">
+      <span class="btn-icon">🖼</span> Сгенерировать картинку
+    </button>
+
+    <!-- Generated image preview -->
+    <div id="genPreviewWrap" class="gen-preview-wrap hidden">
+      <img id="genPreview" class="gen-preview" alt="Сгенерированное выражение" />
+      <div class="gen-label">Сгенерированное изображение</div>
+    </div>
+
+    <button id="solveBtnGen" class="btn-primary hidden" style="margin-top:1rem">
+      <span class="btn-icon">🔍</span> Решить через нейросеть
+    </button>
+  </div>
+
+  <!-- ══ Loader ══ -->
   <div id="loader" class="loader hidden">
-    <div class="spinner"></div>
+    <div class="loader-ring">
+      <div></div><div></div><div></div><div></div>
+    </div>
     <p>Распознаём и решаем…</p>
   </div>
 
-  <!-- Result -->
+  <!-- ══ Result ══ -->
   <section id="result" class="result-section hidden">
     <div id="errorBox" class="error-box hidden"></div>
 
-    <div id="successBox">
-      <div class="result-card">
-        <h2>Распознанное выражение</h2>
-        <p id="exprDisplay" class="mono"></p>
+    <div id="successBox" class="hidden">
+
+      <!-- Expression chip -->
+      <div class="result-expr-bar">
+        <span class="result-expr-label">Распознано</span>
+        <code id="exprDisplay" class="result-expr-value"></code>
       </div>
 
-      <div class="result-card highlight">
-        <h2>Ответ</h2>
-        <p id="answerDisplay" class="answer"></p>
-        <span id="verifiedBadge" class="badge"></span>
+      <!-- Big answer card -->
+      <div class="answer-card">
+        <div class="answer-card-top">
+          <span class="answer-title">Ответ</span>
+          <span id="verifiedBadge" class="badge"></span>
+        </div>
+        <div id="answerDisplay" class="answer-value"></div>
       </div>
 
-      <div class="result-card">
-        <h2>Пошаговое решение</h2>
+      <!-- Steps -->
+      <div class="steps-card">
+        <div class="steps-header">
+          <span class="steps-title">Пошаговое решение</span>
+          <button id="toggleSteps" class="steps-toggle">Скрыть ▲</button>
+        </div>
         <ol id="stepsList" class="steps-list"></ol>
       </div>
+
     </div>
   </section>
-</div>
+
+</div><!-- .app -->
 
 <script src="/static/app.js"></script>
 </body>
