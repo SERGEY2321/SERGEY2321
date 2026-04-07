@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Math Photo Solver</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <!-- MathJax for rendering LaTeX-like notation -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$','$'], ['\\(','\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" defer></script>
+</head>
+<body>
+
+<div class="app">
+  <header>
+    <h1>Math Photo Solver</h1>
+    <p class="subtitle">Сфотографуй задачу — отримай покрокове рішення</p>
+  </header>
+
+  <!-- Upload area -->
+  <section class="upload-section">
+    <div class="drop-zone" id="dropZone">
+      <span class="drop-icon">📷</span>
+      <p>Перетягни фото або <label class="link" for="fileInput">вибери файл</label></p>
+      <input type="file" id="fileInput" accept="image/*" capture="environment" />
+    </div>
+    <img id="preview" class="preview hidden" alt="Preview" />
+  </section>
+
+  <!-- OCR mode -->
+  <section class="options-section">
+    <label for="modeSelect">Режим OCR:</label>
+    <select id="modeSelect">
+      <option value="auto">Авто</option>
+      <option value="printed">Друкований текст</option>
+      <option value="handwritten">Рукописний текст</option>
+    </select>
+  </section>
+
+  <!-- Action button -->
+  <button id="solveBtn" class="btn-primary" disabled>Розв'язати</button>
+
+  <!-- Loader -->
+  <div id="loader" class="loader hidden">
+    <div class="spinner"></div>
+    <p>Розпізнаємо та розв'язуємо…</p>
+  </div>
+
+  <!-- Result -->
+  <section id="result" class="result-section hidden">
+    <div id="errorBox" class="error-box hidden"></div>
+
+    <div id="successBox">
+      <div class="result-card">
+        <h2>Розпізнаний вираз</h2>
+        <p id="exprDisplay" class="mono"></p>
+      </div>
+
+      <div class="result-card highlight">
+        <h2>Відповідь</h2>
+        <p id="answerDisplay" class="answer"></p>
+        <span id="verifiedBadge" class="badge"></span>
+      </div>
+
+      <div class="result-card">
+        <h2>Покрокове рішення</h2>
+        <ol id="stepsList" class="steps-list"></ol>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
