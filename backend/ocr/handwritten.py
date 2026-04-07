@@ -56,7 +56,7 @@ def _get_cnn():
         if _cnn_model is not None:
             from torchvision import transforms
             _cnn_transform = transforms.Compose([
-                transforms.Resize((32, 32)),
+                transforms.Resize((150, 150)),
                 transforms.Grayscale(num_output_channels=3),
                 transforms.ToTensor(),
                 transforms.Normalize([0.5], [0.5]),

@@ -1,7 +1,7 @@
 """
 Synthetic dataset generator for HANDWRITTEN math symbols.
 
-Generates individual symbol crops (28×28 grayscale), applies heavy
+Generates individual symbol crops (150×150 grayscale), applies heavy
 augmentation to simulate real handwriting, then splits 80/20.
 
 Symbols covered:
@@ -40,8 +40,8 @@ def _symbol_text(sym: str) -> str:
 
 def _render_symbol(
     symbol: str,
-    size: int = 28,
-    font_size: int = 20,
+    size: int = 150,
+    font_size: int = 100,
 ) -> Image.Image:
     img = Image.new("L", (size, size), color=255)
     draw = ImageDraw.Draw(img)

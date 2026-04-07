@@ -56,7 +56,7 @@ class SymbolDataset(Dataset):
 # ── Transforms ────────────────────────────────────────────────────────────────
 
 TRAIN_TRANSFORM = transforms.Compose([
-    transforms.Resize((32, 32)),
+    transforms.Resize((150, 150)),
     transforms.RandomRotation(10),
     transforms.ColorJitter(brightness=0.3, contrast=0.3),
     transforms.ToTensor(),
@@ -64,7 +64,7 @@ TRAIN_TRANSFORM = transforms.Compose([
 ])
 
 VAL_TRANSFORM = transforms.Compose([
-    transforms.Resize((32, 32)),
+    transforms.Resize((150, 150)),
     transforms.ToTensor(),
     transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5]),
 ])
