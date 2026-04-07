@@ -17,7 +17,7 @@ def verify_equation(
         (all_verified: bool, steps: list[str])
     """
     steps: list[str] = []
-    steps.append("── Перевірка ──")
+    steps.append("── Проверка ──")
     all_ok = True
 
     for sol in solutions:
@@ -32,7 +32,7 @@ def verify_equation(
             f"  {variable} = {sol}:  LHS = {lhs_val},  RHS = {rhs_val}  {mark}"
         )
 
-    steps.append(f"Перевірка {'пройдена' if all_ok else 'не пройдена'}")
+    steps.append(f"Проверка {'пройдена' if all_ok else 'не пройдена'}")
     return all_ok, steps
 
 
@@ -47,10 +47,10 @@ def verify_expression(
         (verified: bool, steps: list[str])
     """
     steps: list[str] = []
-    steps.append("── Перевірка ──")
+    steps.append("── Проверка ──")
     diff = sp.simplify(original - simplified)
     ok = diff == 0
     mark = "✓" if ok else "✗"
     steps.append(f"  original − simplified = {diff}  {mark}")
-    steps.append(f"Перевірка {'пройдена' if ok else 'не пройдена'}")
+    steps.append(f"Проверка {'пройдена' if ok else 'не пройдена'}")
     return ok, steps

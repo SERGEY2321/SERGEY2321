@@ -47,18 +47,18 @@ def _solve_equation(parsed: dict) -> dict:
     expr_str = parsed["raw_fixed"]
     steps: list[str] = []
 
-    steps.append(f"Вхідний вираз: {lhs} = {rhs}")
+    steps.append(f"Исходное выражение: {lhs} = {rhs}")
 
     equation = sp.Eq(lhs, rhs)
-    steps.append(f"SymPy рівняння: {equation}")
+    steps.append(f"SymPy уравнение: {equation}")
 
     if not syms:
         # No unknowns — just check equality
         diff = sp.simplify(lhs - rhs)
         is_true = diff == 0
-        answer = "Вірно" if is_true else "Невірно"
-        steps.append(f"Різниця LHS − RHS = {diff}")
-        steps.append(f"Відповідь: {answer}")
+        answer = "Верно" if is_true else "Неверно"
+        steps.append(f"Разность LHS − RHS = {diff}")
+        steps.append(f"Ответ: {answer}")
         return _result(expr_str, answer, steps, verified=is_true)
 
     # Differentiate: integral / differential / plain equation
@@ -67,22 +67,22 @@ def _solve_equation(parsed: dict) -> dict:
 
     # Try to solve for each unknown
     variable = syms[0]
-    steps.append(f"Розв'язуємо відносно: {variable}")
+    steps.append(f"Решаем относительно: {variable}")
 
     solutions = sp.solve(equation, variable)
     if not solutions:
-        steps.append("SymPy не знайшов розв'язків.")
-        return _result(expr_str, "Немає розв'язків", steps, verified=False)
+        steps.append("SymPy не нашёл решений.")
+        return _result(expr_str, "Нет решений", steps, verified=False)
 
     if len(solutions) == 1:
         sol = solutions[0]
         sol_simplified = sp.simplify(sol)
-        steps.append(f"Розв'язок: {variable} = {sol_simplified}")
+        steps.append(f"Решение: {variable} = {sol_simplified}")
         answer = f"{variable} = {sol_simplified}"
     else:
         simplified = [sp.simplify(s) for s in solutions]
         answer_parts = [f"{variable} = {s}" for s in simplified]
-        steps.append("Знайдено кілька розв'язків:")
+        steps.append("Найдено несколько решений:")
         for a in answer_parts:
             steps.append(f"  {a}")
         answer = ",  ".join(answer_parts)
@@ -102,7 +102,7 @@ def _evaluate_expression(parsed: dict) -> dict:
     expr_str = parsed["raw_fixed"]
     steps: list[str] = []
 
-    steps.append(f"Вираз: {expr}")
+    steps.append(f"Выражение: {expr}")
 
     if _is_integral(expr):
         return _compute_integral(expr, expr_str, steps)
@@ -110,7 +110,7 @@ def _evaluate_expression(parsed: dict) -> dict:
         return _compute_derivative(expr, expr_str, steps)
 
     simplified = sp.simplify(expr)
-    steps.append(f"Спрощення: {simplified}")
+    steps.append(f"Упрощение: {simplified}")
 
     evaluated = sp.nsimplify(simplified)
     if evaluated != simplified:
@@ -120,7 +120,7 @@ def _evaluate_expression(parsed: dict) -> dict:
     try:
         numeric = float(sp.N(simplified))
         if simplified != numeric:
-            steps.append(f"Числове значення: {numeric}")
+            steps.append(f"Числовое значение: {numeric}")
         answer = str(simplified) if syms else _format_number(numeric)
     except Exception:
         answer = str(simplified)
@@ -147,19 +147,19 @@ def _is_derivative(expr) -> bool:
 
 
 def _compute_integral(expr: sp.Integral, expr_str: str, steps: list) -> dict:
-    steps.append(f"Інтеграл: {expr}")
+    steps.append(f"Интеграл: {expr}")
     result = sp.integrate(*expr.args)
     result_simplified = sp.simplify(result)
-    steps.append(f"Первісна: {result_simplified} + C")
+    steps.append(f"Первообразная: {result_simplified} + C")
     answer = f"{result_simplified} + C"
     return _result(expr_str, answer, steps, verified=True)
 
 
 def _compute_derivative(expr: sp.Derivative, expr_str: str, steps: list) -> dict:
-    steps.append(f"Похідна: {expr}")
+    steps.append(f"Производная: {expr}")
     result = sp.diff(*expr.args)
     result_simplified = sp.simplify(result)
-    steps.append(f"Похідна = {result_simplified}")
+    steps.append(f"Производная = {result_simplified}")
     answer = str(result_simplified)
     return _result(expr_str, answer, steps, verified=True)
 
@@ -175,7 +175,7 @@ def _solve_calculus(parsed: dict, steps: list) -> dict:
         answer = str(result)
     except Exception as e:
         steps.append(f"dsolve failed: {e}")
-        answer = "Не вдалося розв'язати"
+        answer = "Не удалось решить"
     return _result(expr_str, answer, steps, verified=False)
 
 

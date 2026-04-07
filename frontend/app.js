@@ -63,7 +63,7 @@ solveBtn.addEventListener("click", async () => {
     const data = await res.json();
 
     if (!res.ok) {
-      showError(data.detail || "Сталася помилка сервера");
+      showError(data.detail || "Произошла ошибка сервера");
       return;
     }
 
@@ -74,7 +74,7 @@ solveBtn.addEventListener("click", async () => {
 
     showSuccess(data);
   } catch (err) {
-    showError("Не вдалося з'єднатися з сервером: " + err.message);
+    showError("Не удалось подключиться к серверу: " + err.message);
   } finally {
     hideLoader();
   }
@@ -100,7 +100,7 @@ function showError(msg) {
   result.classList.remove("hidden");
   errorBox.classList.remove("hidden");
   successBox.classList.add("hidden");
-  errorBox.textContent = "Помилка: " + msg;
+  errorBox.textContent = "Ошибка: " + msg;
 }
 
 function showSuccess(data) {
@@ -113,10 +113,10 @@ function showSuccess(data) {
   answerDisplay.textContent = data.answer || "—";
 
   if (data.verified === true) {
-    verifiedBadge.textContent = "Перевірено ✓";
+    verifiedBadge.textContent = "Проверено ✓";
     verifiedBadge.className = "badge ok";
   } else if (data.verified === false) {
-    verifiedBadge.textContent = "Не перевірено ✗";
+    verifiedBadge.textContent = "Не проверено ✗";
     verifiedBadge.className = "badge fail";
   } else {
     verifiedBadge.textContent = "";

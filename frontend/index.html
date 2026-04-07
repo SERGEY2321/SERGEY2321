@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,17 +19,17 @@
 <div class="app">
   <header>
     <h1>Math Photo Solver</h1>
-    <p class="subtitle">Сфотографуй задачу — отримай покрокове рішення</p>
+    <p class="subtitle">Сфотографируй задачу — получи пошаговое решение</p>
   </header>
 
   <!-- Upload area -->
   <section class="upload-section">
     <div class="drop-zone" id="dropZone">
       <span class="drop-icon">📷</span>
-      <p>Перетягни фото або <label class="link" for="fileInput">вибери файл</label></p>
+      <p>Перетащи фото или <label class="link" for="fileInput">выбери файл</label></p>
       <input type="file" id="fileInput" accept="image/*" capture="environment" />
     </div>
-    <img id="preview" class="preview hidden" alt="Preview" />
+    <img id="preview" class="preview hidden" alt="Предпросмотр" />
   </section>
 
   <!-- OCR mode -->
@@ -37,18 +37,18 @@
     <label for="modeSelect">Режим OCR:</label>
     <select id="modeSelect">
       <option value="auto">Авто</option>
-      <option value="printed">Друкований текст</option>
-      <option value="handwritten">Рукописний текст</option>
+      <option value="printed">Печатный текст</option>
+      <option value="handwritten">Рукописный текст</option>
     </select>
   </section>
 
   <!-- Action button -->
-  <button id="solveBtn" class="btn-primary" disabled>Розв'язати</button>
+  <button id="solveBtn" class="btn-primary" disabled>Решить</button>
 
   <!-- Loader -->
   <div id="loader" class="loader hidden">
     <div class="spinner"></div>
-    <p>Розпізнаємо та розв'язуємо…</p>
+    <p>Распознаём и решаем…</p>
   </div>
 
   <!-- Result -->
@@ -57,18 +57,18 @@
 
     <div id="successBox">
       <div class="result-card">
-        <h2>Розпізнаний вираз</h2>
+        <h2>Распознанное выражение</h2>
         <p id="exprDisplay" class="mono"></p>
       </div>
 
       <div class="result-card highlight">
-        <h2>Відповідь</h2>
+        <h2>Ответ</h2>
         <p id="answerDisplay" class="answer"></p>
         <span id="verifiedBadge" class="badge"></span>
       </div>
 
       <div class="result-card">
-        <h2>Покрокове рішення</h2>
+        <h2>Пошаговое решение</h2>
         <ol id="stepsList" class="steps-list"></ol>
       </div>
     </div>
