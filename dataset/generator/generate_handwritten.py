@@ -41,7 +41,7 @@ def _symbol_text(sym: str) -> str:
 def _render_symbol(
     symbol: str,
     size: int = 150,
-    font_size: int = 100,
+    font_size: int = 40,
 ) -> Image.Image:
     img = Image.new("L", (size, size), color=255)
     draw = ImageDraw.Draw(img)
